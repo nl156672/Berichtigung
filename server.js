@@ -8,6 +8,7 @@ class Kunde{
 		// IstEingeloggt ist ein boolean.
 		// Der Wert ist entweder wahr oder falsch.
 		this.IstEingeloggt
+		this.Email 
 	}
 }
 
@@ -18,8 +19,9 @@ let kunde = new Kunde();
 kunde.Nachname = "Kiff"
 kunde.Vorname = "Pit"
 kunde.Benutzername = "pk"
-kunde.Kennwort = "123"
+kunde.Kennwort = "123" 
 kunde.IstEingeloggt = false
+kunde.Email ="pit@kiff.de"
 
 // Klassenefinition des Kundenberaters
 class Kundenberater{
@@ -160,6 +162,10 @@ app.get('/agb', (req, res) => {
 
 	if(kunde.IstEingeloggt){
 
+		// die res.render musszwischen if und else getauscht werden.
+		// wenn der Kunde eingelggt ist wird die agb seite gerendert.
+		// Wenn ide Zugangsdaten nicht korrekt sind wird er zu Login zurückgeworfen
+
 		// Wenn die Zugangsdaten korrekt sind, dann wird die angesurfte Seite gerendert.
 		res.render('login.ejs',{});
 
@@ -263,6 +269,9 @@ app.post('/profil', (req, res) => {
 });
 
 app.get('/postfach', (req, res) => {
+
+	// Es fehlt die Prüfung, mit der geprüft wird, ob der Kunde eingeloggt ist. 
+
 	res.render('postfach.ejs',{});
 });
 
@@ -345,7 +354,7 @@ app.get('/geldAnlegen', (req, res) => {
 	
 			Betrag:120,
 			Laufzeit:2,
-			Meldung: ""
+			Meldung: "Der Zinssatz beträgt 10%"
 		})
 
 	}else{
@@ -356,6 +365,9 @@ app.get('/geldAnlegen', (req, res) => {
 		});
 	}
 });
+
+
+
 
 // Die Funktion app.post('/geldAnlegen...) wird abgearbeitet, wenn der Kunde auf dem Formular den Absenden-Button klickt.
 
@@ -373,7 +385,10 @@ app.post('/geldAnlegen', (req, res) => {
 
 	let zinssatz = 0.1
 
-	let zinsen = betrag * zinssatz;
+	let endbetrag = betrag * Math.pow(1 + zinssatz, laufzeit)
+	let zinsen = endbetrag - betrag 
+
+	
 
 
 	if(kunde.IstEingeloggt){
